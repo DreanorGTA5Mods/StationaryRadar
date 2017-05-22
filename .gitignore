@@ -1,5 +1,12 @@
 # Compiled Lua sources
 luac.out
+debughelp
+fivem*
+*game*
+*managers*
+*system*
+*test*
+*.h
 
 # luarocks build files
 *.src.rock
@@ -38,4 +45,3 @@ luac.out
 *.i*86
 *.x86_64
 *.hex
-
