@@ -1,50 +1,20 @@
---script by devilkkw
-local maxSpeed= 40.0
-local minSpeed= 0.0
-local info ="nope"
+RegisterNetEvent('setRadar')
+local speedcam;
 
-function drawTxt(x,y ,width,height,scale, text, r,g,b,a)
-    SetTextFont(0)
-    SetTextProportional(0)
-    SetTextScale(scale, scale)
-    SetTextColour(r, g, b, a)
-    SetTextDropShadow(0, 0, 0, 0,255)
-    SetTextEdge(1, 0, 0, 0, 255)
-    SetTextDropShadow()
-    SetTextOutline()
-    SetTextEntry("STRING")
-    AddTextComponentString(text)
-    DrawText(x - width/2, y - height/2 + 0.005)
-end
+AddEventHandler('setRadar', function()
+	speedcam = GetEntityCoords(GetPlayerPed(-1))
+	--GetPlayerPed(PlayerId())
+    TriggerEvent("chatMessage", "[System]", { 255,0,0}, "Radar set at".." x: "..pos['x']) 
+end)
 
 Citizen.CreateThread(function()
 	while true do
-		Wait(0)
-		  if IsControlPressed(1, 217)then
-		    local pos = GetEntityCoords(GetPlayerPed(-1))
-			 local carM = GetClosestVehicle(pos['x'], pos['y'], pos['z'], 10.0,0,70)
-			 if carM ~=nil then
-			      local plate=GetVehicleNumberPlateText(carM)
-			      local herSpeedKm= GetEntitySpeed(carM)*3.6
-			      local herSpeedMph= GetEntitySpeed(carM)*2.236936
-			 
-			 if herSpeedKm > minSpeed then			 
-			         
-			    if herSpeedKm < maxSpeed then 
-			      
-				  info = string.format("~b~Plate:~w~ %s ~n~~y~Km/h: ~g~%s~n~~y~Mph: ~g~%s",plate,math.ceil(herSpeedKm),math.ceil(herSpeedMph) )
-				 else
-				  
-				  info = string.format("~b~Plate:~w~ %s ~n~~y~Km/h: ~r~%s~n~~y~Mph: ~r~%s",plate,math.ceil(herSpeedKm),math.ceil(herSpeedMph) )
-				  
-				end 
-				
-				 DrawRect(0.5,0.0,0.12,0.18,0,10,28,210)
-                 drawTxt(0.55,0.1,0.185,0.206, 0.40, info, 255,255,255,255)
-			     
-			 end
-			 end
-		
-	   end
+		Wait(0)		
+		if speedcam ~=nil then
+			local pos = GetEntityCoords(GetPlayerPed(-1))
+			if pos['x'] +5 >= speedcam['x'] then -- get radius of area in which people will get busted
+				TriggerEvent("chatMessage", "[System]", { 255,0,0}, "speeding"..pos['x']) 
+			end
+		end
 	 end  
 end)
