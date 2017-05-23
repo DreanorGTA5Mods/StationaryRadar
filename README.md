@@ -1,1 +1,2 @@
 # StationaryRadar
+![preview](preview.png)
