@@ -16,8 +16,10 @@ end)
 
 -- Manually set Radar
 AddEventHandler('setRadar', function(array)
-    speedcams[GetEntityCoords(GetPlayerPed(-1))] = 0;
-    -- todo Trigger server to save this position
+    local currentPos = GetEntityCoords(GetPlayerPed(-1));
+    x, y, z = table.unpack(currentPos)
+    speedcams[currentPos] = 0;
+    TriggerServerEvent("saveRadarPosition", x, y, z);
 end)
 
 -- Reguest to get all Radars
@@ -30,7 +32,7 @@ end)
 -----------------------------------------------------------------------
 
 -- Determines if player broke speed and message should be triggered
-function SpeedBreak(speedcam, hasBeenFucked, speed, numberplate)
+function SpeedBreak(speedcam, hasBeenFucked, speed, name, numberplate)
     if speed >= maxSpeedKmh then
         if hasBeenFucked == 0 then
             speedcams[speedcam] = 1 -- player got busted by cam
@@ -39,7 +41,8 @@ function SpeedBreak(speedcam, hasBeenFucked, speed, numberplate)
             local info = string.format("%s | %s mph / %s km/h", numberplate, math.ceil(speed*2.236936), math.ceil(speed*3.6));
 
             -- todo add vehicle name
-            TriggerEvent("chatMessage", "[System]", { 255,0,0}, string.format("%s | %s | %s mph / %s km/h", streetname, numberplate, math.ceil(speed*2.236936), math.ceil(speed*3.6)));
+            local text = string.format("%s | %s | %s mph / %s km/h @ %s", name, numberplate, math.ceil(speed*2.236936), math.ceil(speed*3.6), streetname);
+            TriggerEvent("chatMessage", "[Speedcam]", { 255,0,0}, text);
         end
     end
 end
@@ -63,10 +66,11 @@ function HandleSpeedcam(speedcam, hasBeenFucked)
         local vehicle = GetPlayersLastVehicle() -- gets the current vehicle the player is in.
         if vehicle ~=nil then
             local numberplate = GetVehicleNumberPlateText(vehicle);
-			SpeedBreak(speedcam, hasBeenFucked, GetEntitySpeed(vehicle), numberplate);
+            local name = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle));
+            SpeedBreak(speedcam, hasBeenFucked, GetEntitySpeed(vehicle), name, numberplate);
         end
     else
-        speedcams[speedcam] = 0; --might remove that for logging of who got fucked where
+        speedcams[speedcam] = 0;
     end
 end
 
