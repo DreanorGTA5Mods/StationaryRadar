@@ -41,7 +41,6 @@ function SpeedBreak(speedcam, hasBeenFucked, speed, name, numberplate)
             local streetname = GetStreetNameFromHashKey(streethash);
             local info = string.format("%s | %s mph / %s km/h", numberplate, mphspeed, math.ceil(speed*3.6));
 
-            -- todo add vehicle name
             local text = string.format("%s | %s | %s mph / %s km/h @ %s", name, numberplate, math.ceil(speed*2.236936), math.ceil(speed*3.6), streetname);
             TriggerEvent("chatMessage", "[Speedcam]", { 255,0,0}, text);
         end
