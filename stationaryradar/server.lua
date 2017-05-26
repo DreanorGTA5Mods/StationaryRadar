@@ -1,7 +1,7 @@
 require "resources/stationaryradar/lib/MySQL"
-MySQL:open("localhost", "stationaryradar", "root", "1234")
+MySQL:open("localhost", "gta", "root", "1234")
 
-local speedcamsCache = {};
+local speedcams = {};
 local refreshCache = true;
 -----------------------------------------------------------------------
 ---------------------Events--------------------------------------------
@@ -13,33 +13,46 @@ AddEventHandler('chatMessage', function(source, n, message)
     if(message == "/set speedradar") then
         TriggerClientEvent('setRadar', source);
     end
+    if(message == "/show radars") then
+        TriggerClientEvent('showRadars', source);
+    end
+    if(message == "/hide radars") then
+        TriggerClientEvent('hideRadars', source);
+    end
 end)
 
 -- Loads Radars from the database and returns to the player
 RegisterServerEvent('getRadars')
 AddEventHandler('getRadars', function()
-    if refreshCache then
-        refreshCache = false;
-        local query = MySQL:executeQuery("SELECT * FROM stationaryradar.stationaryradar")
+    if (refreshCache) then
+        local query = MySQL:executeQuery("SELECT * FROM gta.stationaryradar")
         local result = MySQL:getResults(query, {'x', 'y', 'z', 'maxspeed'})
+        if (result[1]) then
+            refreshCache = false;
+            for _, value in ipairs(result) do
+                local position = { x = value.x, y = value.y, z = value.z };
+                speedcams[position] = 0;
 
-        local speedcams = {};
-        for _, value in ipairs(result) do
-            local position = { x = value.x, y = value.y, z = value.z };
-            speedcams[position] = 0;
+            end
         end
-
-        speedcamsCache = speedcams;
     end
 
-    TriggerClientEvent('loadRadars', source, speedcamsCache);
+    TriggerClientEvent('loadRadars', source, speedcams);
 end)
 
 -- Saves new locations to the database
 RegisterServerEvent('saveRadarPosition')
 AddEventHandler('saveRadarPosition', function(x, y, z, maxspeed)
-    refreshCache = true;
-    local sql = string.format("INSERT INTO `stationaryradar`.`stationaryradar` (`x`, `y`, `z`, `maxspeed`) VALUES ('%s', '%s', '%s', '%s')", math.floor(x+0.5), math.floor(y+0.5), math.floor(z+0.5), maxspeed);
+    local sql = string.format("INSERT INTO `gta`.`stationaryradar` (`x`, `y`, `z`, `maxspeed`) VALUES ('%s', '%s', '%s', '%s')", tostring(round(x, 2)), tostring(round(y, 2)), tostring(round(z, 2)), maxspeed);
     MySQL:executeQuery(sql);
-    -- todo Trigger event to reload cache on all players
+
+    --Refresh radars
+    local position = { x = x, y = y, z = z };
+    speedcams[position] = 0;
+    TriggerClientEvent('loadRadars', source, speedcams);
 end)
+
+function round(num, numDecimalPlaces)
+    local mult = 10^(numDecimalPlaces or 0)
+    return math.floor(num * mult + 0.5) / mult
+end
