@@ -2,9 +2,10 @@ RegisterNetEvent('setRadar')
 RegisterNetEvent('loadRadars')
 RegisterNetEvent('showRadars')
 RegisterNetEvent('hideRadars')
+RegisterNetEvent('anotherevent')
 
 local speedcams = {};
-local maxSpeedMph = 1;
+local maxSpeedMph = 50;
 local speedcamRange = 20;
 local blips = {};
 
@@ -15,9 +16,9 @@ local blips = {};
 -- Loads Radars into the client
 AddEventHandler('loadRadars', function(loadedSpeedcams)
     speedcams = loadedSpeedcams;
-
 end)
 
+-- Shows blips on map
 AddEventHandler('showRadars', function()
     for position, value in pairs(speedcams) do
         local blip = AddBlipForCoord(position['x'],position['y'],position['z'])
@@ -25,6 +26,7 @@ AddEventHandler('showRadars', function()
     end
 end)
 
+-- Hides blips from map
 AddEventHandler('hideRadars', function()
     for position, blip in pairs(blips) do
         RemoveBlip(blip);
