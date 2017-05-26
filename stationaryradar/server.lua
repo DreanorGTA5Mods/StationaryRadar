@@ -13,7 +13,8 @@ local refreshCache = true;
 
 -- Chatcommands which can be set by the police
 AddEventHandler('chatMessage', function(player, playerName, message)
-    if (playerIsCop(player)) then
+    local playersteamid = GetPlayerIdentifiers(player)[1];
+    if (playerIsCop(playersteamid)) then
         if(message == "/set speedradar") then
             TriggerClientEvent('setRadar', player);
         end
@@ -29,6 +30,7 @@ end)
 -- Loads Radars from the database and returns to the player
 AddEventHandler('getRadars', function()
     if (refreshCache) then
+        GetPlayerIdentifiers(source)
         local query = MySQL:executeQuery("SELECT * FROM gta.stationaryradar");
         local result = MySQL:getResults(query, {'x', 'y', 'z', 'maxspeed'});
         if (result[1]) then
@@ -52,6 +54,9 @@ AddEventHandler('saveRadarPosition', function(x, y, z, maxspeed)
     local position = { x = x, y = y, z = z };
     speedcams[position] = 0;
     TriggerClientEvent('loadRadars', source, speedcams);
+    --Refresh blips
+    TriggerClientEvent('hideRadars', source);
+    TriggerClientEvent('showRadars', source);
 end)
 
 -----------------------------------------------------------------------
@@ -66,7 +71,6 @@ end
 
 -- Checks if the player is a cop
 function playerIsCop(identifier)
-    print("id is : "..identifier);
     local query = MySQL:executeQuery(string.format("SELECT * FROM `gta`.`police` WHERE identifier = '%s'", identifier));
     local result = MySQL:getResults(query, {'identifier'});
     return result[1];
