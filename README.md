@@ -3,6 +3,9 @@
 
 This script allows you to set multiple stationary radars that trigger if players drive too fast.
 
+Currently there is no config, but there will be one once it is out of beta. More at [github](https://github.com/DreanorGTA5Mods/StationaryRadar).
+Because of that there are hardcoded speedlimits, driving faster than 50mph will trigger a cam.
+
 ![preview1](preview1.png)
 ![preview2](preview2.png)
 
@@ -13,6 +16,7 @@ This script allows you to set multiple stationary radars that trigger if players
 ## Current Features
 
 * show / hide blips for stationary radars
+* flashing radars if a player drives too fast
 * permissions for who can use all these features
 
 ### Commands

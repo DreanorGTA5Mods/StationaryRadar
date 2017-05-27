@@ -60,7 +60,7 @@ function SpeedBreak(speedcam, hasBeenFucked, speed, name, numberplate)
             local streethash = GetStreetNameAtCoord(speedcam['x'], speedcam['y'], speedcam['z']);
             local streetname = GetStreetNameFromHashKey(streethash);
             local text = string.format("%s | %s | %s mph / %s km/h @ %s", name, numberplate, mphspeed, math.ceil(speed*3.6), streetname);
-            TriggerEvent("chatMessage", "[Speedcam]", { 255,0,0}, text);
+            TriggerServerEvent("sendMessageToAllCops", text);
         end
     end
 end

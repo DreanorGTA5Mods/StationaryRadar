@@ -3,6 +3,7 @@ MySQL:open("localhost", "gta", "root", "1234")
 
 RegisterServerEvent('saveRadarPosition')
 RegisterServerEvent('getRadars')
+RegisterServerEvent('sendMessageToAllCops')
 
 local speedcams = {};
 local refreshCache = true;
@@ -25,6 +26,11 @@ AddEventHandler('chatMessage', function(player, playerName, message)
             TriggerClientEvent('hideRadars', player);
         end
     end
+end)
+
+-- Sends message to all with permission_level 1
+AddEventHandler('sendMessageToAllCops', function(source, text)
+
 end)
 
 -- Loads Radars from the database and returns to the player
