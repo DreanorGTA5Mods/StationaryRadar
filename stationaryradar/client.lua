@@ -2,7 +2,6 @@ RegisterNetEvent('setRadar')
 RegisterNetEvent('loadRadars')
 RegisterNetEvent('showRadars')
 RegisterNetEvent('hideRadars')
-RegisterNetEvent('anotherevent')
 
 local speedcams = {};
 local maxSpeedMph = 50;
