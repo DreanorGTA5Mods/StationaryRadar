@@ -21,7 +21,7 @@ All commands require a permission level of 1
 
 ## Installation
 
-Set your database host, schema, user and password
+Edit the server.lua and set your database host, schema, user and password
 ```lua
 MySQL:open("localhost", "gta", "root", "1234")
 ```
