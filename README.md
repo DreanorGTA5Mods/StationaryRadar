@@ -7,7 +7,7 @@ This script allows you to set multiple stationary radars that trigger if players
 
 * MySQL database
 
-## Current Features - Beta
+## Current Features
 
 * show / hide blips for stationary radars
 * permissions for who can use all these features
