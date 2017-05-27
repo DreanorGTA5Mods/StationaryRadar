@@ -3,6 +3,9 @@
 
 This script allows you to set multiple stationary radars that trigger if players drive too fast.
 
+![preview1][preview1.png]
+![preview2][preview2.png]
+
 ## Requirements
 
 * MySQL database
