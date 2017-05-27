@@ -14,7 +14,7 @@ local refreshCache = true;
 -- Chatcommands which can be set by the police
 AddEventHandler('chatMessage', function(player, playerName, message)
     local playersteamid = GetPlayerIdentifiers(player)[1];
-    if (playerIsCop(playersteamid)) then
+    if (playerHasPermissions(playersteamid)) then
         if(message == "/set speedradar") then
             TriggerClientEvent('setRadar', player);
         end
@@ -31,7 +31,7 @@ end)
 AddEventHandler('getRadars', function()
     if (refreshCache) then
         GetPlayerIdentifiers(source)
-        local query = MySQL:executeQuery("SELECT * FROM gta.stationaryradar");
+        local query = MySQL:executeQuery("SELECT * FROM stationaryradar");
         local result = MySQL:getResults(query, {'x', 'y', 'z', 'maxspeed'});
         if (result[1]) then
             refreshCache = false;
@@ -42,12 +42,13 @@ AddEventHandler('getRadars', function()
         end
     end
 
+    addPlayerToDatabase(source);
     TriggerClientEvent('loadRadars', source, speedcams);
 end)
 
 -- Saves new locations to the database
 AddEventHandler('saveRadarPosition', function(x, y, z, maxspeed)
-    local sql = string.format("INSERT INTO `gta`.`stationaryradar` (`x`, `y`, `z`, `maxspeed`) VALUES ('%s', '%s', '%s', '%s')", tostring(round(x, 2)), tostring(round(y, 2)), tostring(round(z, 2)), maxspeed);
+    local sql = string.format("INSERT INTO stationaryradar (`x`, `y`, `z`, `maxspeed`) VALUES ('%s', '%s', '%s', '%s')", tostring(round(x, 2)), tostring(round(y, 2)), tostring(round(z, 2)), maxspeed);
     MySQL:executeQuery(sql);
 
     --Refresh radars
@@ -70,8 +71,19 @@ function round(num, numDecimalPlaces)
 end
 
 -- Checks if the player is a cop
-function playerIsCop(identifier)
-    local query = MySQL:executeQuery(string.format("SELECT * FROM `gta`.`police` WHERE identifier = '%s'", identifier));
-    local result = MySQL:getResults(query, {'identifier'});
+function playerHasPermissions(steamId)
+    local query = MySQL:executeQuery(string.format("SELECT * FROM stationaryradar_permissions WHERE steamid = '%s' and permission_level = 1", steamId));
+    local result = MySQL:getResults(query, {'steamid'});
     return result[1];
+end
+
+-- Adds Player to the Permission table if not already existent
+function addPlayerToDatabase(source)
+    local playersteamid = GetPlayerIdentifiers(source)[1];
+    local query = MySQL:executeQuery(string.format("SELECT * FROM stationaryradar_permissions where steamid = '%s'", playersteamid));
+    local result = MySQL:getResults(query, {'steamid'});
+
+    if (not result[1]) then
+        MySQL:executeQuery(string.format("insert into stationaryradar_permissions (steamid, name, permission_level) values ('%s', '%s', 0)", playersteamid, GetPlayerName(source)));
+    end
 end

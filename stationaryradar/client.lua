@@ -8,7 +8,7 @@ local speedcams = {};
 local maxSpeedMph = 50;
 local speedcamRange = 20;
 local blips = {};
-
+local blipFlashTimeInMs = 10000;
 -----------------------------------------------------------------------
 ---------------------Events--------------------------------------------
 -----------------------------------------------------------------------
@@ -56,6 +56,7 @@ function SpeedBreak(speedcam, hasBeenFucked, speed, name, numberplate)
     if mphspeed >= maxSpeedMph then
         if hasBeenFucked == 0 then
             speedcams[speedcam] = 1 -- player got busted by cam
+            SetBlipFlashTimer(blips[speedcam], blipFlashTimeInMs)
             local streethash = GetStreetNameAtCoord(speedcam['x'], speedcam['y'], speedcam['z']);
             local streetname = GetStreetNameFromHashKey(streethash);
             local text = string.format("%s | %s | %s mph / %s km/h @ %s", name, numberplate, mphspeed, math.ceil(speed*3.6), streetname);
