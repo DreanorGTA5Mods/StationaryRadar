@@ -1,9 +1,10 @@
 require "resources/stationaryradar/lib/MySQL"
 MySQL:open("localhost", "gta", "root", "1234")
 
-RegisterServerEvent('saveRadarPosition')
-RegisterServerEvent('getRadars')
-RegisterServerEvent('sendMessageToAllCops')
+RegisterServerEvent('saveRadarPosition');
+RegisterServerEvent('getRadars');
+RegisterServerEvent('removeRadar');
+RegisterServerEvent('sendMessageToAllCops');
 
 local speedcams = {};
 local refreshCache = true;
@@ -19,6 +20,9 @@ AddEventHandler('chatMessage', function(player, playerName, message)
         if(message == "/set speedradar") then
             TriggerClientEvent('setRadar', player);
         end
+        if(message == "/remove speedradar") then
+            TriggerClientEvent('getRadarsToRemove', player);
+        end
         if(message == "/show radars") then
             TriggerClientEvent('showRadars', player);
         end
@@ -31,6 +35,12 @@ end)
 -- Sends message to all with permission_level 1
 AddEventHandler('sendMessageToAllCops', function(source, text)
 
+end)
+
+-- Deletes radar from database
+AddEventHandler('removeRadar', function(x, y, z)
+    local sql = string.format("delete from stationaryradar where x =%s and y =%s and z =%s)", round(x, 2), round(y, 2), round(z, 2));
+    MySQL:executeQuery(sql);
 end)
 
 -- Loads Radars from the database and returns to the player
