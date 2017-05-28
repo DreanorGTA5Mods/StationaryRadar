@@ -3,12 +3,10 @@ RegisterNetEvent('getRadarsToRemove');
 RegisterNetEvent('loadRadars');
 RegisterNetEvent('showRadars');
 RegisterNetEvent('hideRadars');
+RegisterNetEvent('loadConfig');
 
 local speedcams = {};
-local maxSpeedMph = 50;
-local speedcamRange = 20;
 local blips = {};
-local blipFlashTimeInMs = 10000;
 -----------------------------------------------------------------------
 ---------------------Events--------------------------------------------
 -----------------------------------------------------------------------
@@ -32,6 +30,13 @@ AddEventHandler('hideRadars', function()
         RemoveBlip(blip);
     end
     blips = {};
+end)
+
+-- Hides blips from map
+AddEventHandler('loadConfig', function(speed, speedRange, flashTime)
+    maxSpeedMph = speed;
+    speedcamRange = speedRange;
+    blipFlashTimeInMs = flashTime;
 end)
 
 -- Manually set Radar
@@ -85,7 +90,7 @@ function SpeedBreak(speedcam, hasBeenFucked, speed, name, numberplate)
             local streethash = GetStreetNameAtCoord(speedcam['x'], speedcam['y'], speedcam['z']);
             local streetname = GetStreetNameFromHashKey(streethash);
             local text = string.format("%s | %s | %s mph / %s km/h @ %s", name, numberplate, mphspeed, math.ceil(speed*3.6), streetname);
-            TriggerServerEvent("sendMessageToAllCops", text);
+            --TriggerServerEvent("sendMessageToAllCops", text);
         end
     end
 end

@@ -8,6 +8,7 @@ This script allows you to set multiple stationary radars that trigger if players
 
 ## Requirements
 
+* DisableAuth set to false on your server inside citmp-server.yml
 * MySQL database
 
 ## Current Features
