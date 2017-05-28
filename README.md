@@ -27,10 +27,8 @@ All commands require a permission level of 1
 
 ## Installation
 
-Edit the server.lua and set your database host, schema, user and password
-```lua
-MySQL:open("localhost", "gta", "root", "1234")
-```
+* You may have to unblock the following file **lib\MySql.Data.dll**
+* Edit the **config.lua** and set your database host, schema, user and password
 
 Execute the following sql command on your database
 ```sql
