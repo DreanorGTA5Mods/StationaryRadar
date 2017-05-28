@@ -1,8 +1,6 @@
 # StationaryRadar
 ## Description
 
-[![Downloads (latest release)](https://img.shields.io/github/downloads/DreanorGTA5Mods/StationaryRadar/latest/total.svg)](https://github.com/DreanorGTA5Mods/StationaryRadar/releases/latest)
-
 This script allows you to set multiple stationary radars that trigger if players drive too fast.
 
 ![preview1](preview1.png)
